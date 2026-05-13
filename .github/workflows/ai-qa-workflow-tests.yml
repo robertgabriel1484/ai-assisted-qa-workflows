@@ -1,0 +1,30 @@
+name: AI-Assisted QA Workflow Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  ai-qa-workflow-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run unit tests
+        run: python -m unittest discover tests
+
+      - name: Run test case evaluator
+        run: python scripts/evaluate_test_cases.py sample_artifacts/sample_ai_generated_test_cases.md
+
+      - name: Run bug report scorer
+        run: python scripts/score_bug_report.py sample_artifacts/sample_bug_report_after.md
